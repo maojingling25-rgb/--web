@@ -1,0 +1,14 @@
+{
+  "name": "tingjian-ai-frontier",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "pipeline": "node scripts/run-pipeline.mjs",
+    "check": "node --check scripts/run-pipeline.mjs && node --check scripts/write-public-config.mjs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.57.0",
+    "fast-xml-parser": "^5.2.5",
+    "openai": "^5.16.0"
+  }
+}

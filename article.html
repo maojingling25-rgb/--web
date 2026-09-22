@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="听见全球 AI 前沿：AI 播客与访谈的结构化长篇解读。" />
+    <title>解读文章 | 听见全球 AI 前沿</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="./public-config.js"></script>
+    <script src="./demo-articles.js"></script>
+    <style>
+      :root {
+        --ink: #20211f;
+        --ink-soft: #4d4f49;
+        --muted: #74766f;
+        --paper: #f7f7f3;
+        --paper-deep: #ecece7;
+        --white: #ffffff;
+        --line: #d5d7d0;
+        --accent: #a9473c;
+        --accent-soft: #f0dfdc;
+      }
+
+      * { box-sizing: border-box; }
+
+      html { scroll-behavior: smooth; }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--paper);
+        font-family: "Noto Sans SC", sans-serif;
+        line-height: 1.7;
+      }
+
+      a { color: inherit; text-decoration: none; }
+
+      button { font: inherit; }
+
+      .shell {
+        width: min(1180px, calc(100% - 48px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        padding: 8px 0;
+        color: var(--muted);
+        border-bottom: 1px solid var(--line);
+        font: 10px/1.3 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .site-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        padding: 22px 0 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 11px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+      }
+
+      .brand-mark {
+        width: 28px;
+        height: 28px;
+        position: relative;
+        background: var(--ink);
+      }
+
+      .brand-mark::before,
+      .brand-mark::after {
+        position: absolute;
+        left: 4px;
+        width: 20px;
+        height: 2px;
+        content: "";
+      }
+
+      .brand-mark::before { top: 9px; background: var(--paper); }
+      .brand-mark::after { top: 17px; background: #d06a5f; }
+
+      .brand small {
+        display: block;
+        margin-top: 3px;
+        color: var(--muted);
+        font: 9px/1 "DM Mono", monospace;
+        letter-spacing: 0;
+      }
+
+      .back-link {
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .article-shell {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 250px;
+        gap: 84px;
+        padding: 76px 0 100px;
+      }
+
+      .article-main { min-width: 0; }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--accent);
+        font: 500 10px/1.3 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .eyebrow::before {
+        width: 20px;
+        height: 1px;
+        background: currentColor;
+        content: "";
+      }
+
+      h1, h2, p { margin: 0; }
+
+      h1 {
+        max-width: 850px;
+        margin-top: 20px;
+        font-size: clamp(38px, 6vw, 72px);
+        font-weight: 700;
+        letter-spacing: -0.08em;
+        line-height: 1.08;
+      }
+
+      .dek {
+        max-width: 760px;
+        margin-top: 25px;
+        color: var(--ink-soft);
+        font-size: 17px;
+        line-height: 1.8;
+      }
+
+      .article-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 9px 20px;
+        margin-top: 26px;
+        color: var(--muted);
+        font: 10px/1.5 "DM Mono", monospace;
+        text-transform: uppercase;
+      }
+
+      .article-meta span + span::before {
+        margin-right: 20px;
+        color: var(--line);
+        content: "/";
+      }
+
+      .source-panel {
+        margin-top: 42px;
+        padding: 21px 22px;
+        border: 1px solid var(--line);
+        background: var(--paper-deep);
+      }
+
+      .source-panel-label {
+        color: var(--muted);
+        font: 10px/1.4 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .source-panel h2 {
+        margin-top: 8px;
+        font-size: 18px;
+        letter-spacing: -0.05em;
+      }
+
+      .source-panel p {
+        margin-top: 5px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .play-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 15px;
+        padding: 10px 13px;
+        color: var(--paper);
+        background: var(--ink);
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .play-link svg { width: 14px; height: 14px; }
+
+      .play-link.is-disabled {
+        color: var(--muted);
+        border: 1px solid var(--line);
+        background: var(--white);
+        cursor: not-allowed;
+      }
+
+      .article-content {
+        max-width: 760px;
+        margin-top: 58px;
+        color: var(--ink-soft);
+        font-size: 16px;
+        line-height: 1.95;
+      }
+
+      .article-content h2 {
+        display: flex;
+        align-items: baseline;
+        gap: 12px;
+        margin: 58px 0 18px;
+        color: var(--ink);
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: -0.06em;
+        line-height: 1.3;
+      }
+
+      .article-content h2:first-child { margin-top: 0; }
+
+      .article-content h2::before {
+        width: 22px;
+        height: 2px;
+        flex: 0 0 auto;
+        background: var(--accent);
+        content: "";
+      }
+
+      .article-content h3 {
+        margin: 0;
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1.45;
+      }
+
+      .article-content p { margin: 0 0 19px; }
+
+      .article-content .section-intro {
+        max-width: 680px;
+        margin: -4px 0 28px 34px;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.8;
+      }
+
+      .article-content .content-label {
+        margin: 23px 0 7px;
+        color: var(--accent);
+        font: 700 10px/1.4 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .article-content blockquote {
+        margin: 12px 0 24px;
+        padding: 13px 18px;
+        color: var(--ink);
+        border-left: 3px solid var(--accent);
+        background: var(--accent-soft);
+        font-size: 17px;
+        line-height: 1.8;
+      }
+
+      .article-content hr {
+        margin: 35px 0 30px;
+        border: 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .insight-block {
+        margin: 0 0 30px;
+        padding: 22px 24px 5px;
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--ink);
+        background: var(--white);
+      }
+
+      .insights-list {
+        display: grid;
+        gap: 16px;
+        margin: 0 0 30px;
+      }
+
+      .insight-card {
+        position: relative;
+        padding: 25px 26px 22px 72px;
+        border: 1px solid var(--line);
+        border-left: 3px solid var(--accent);
+        background: var(--white);
+      }
+
+      .insight-number {
+        position: absolute;
+        top: 22px;
+        left: 22px;
+        color: var(--accent);
+        font: 500 12px/1 "DM Mono", monospace;
+      }
+
+      .insight-title {
+        color: var(--ink);
+        font-size: 18px;
+        font-weight: 700;
+        letter-spacing: -0.04em;
+        line-height: 1.45;
+      }
+
+      .insight-field {
+        margin-top: 18px;
+      }
+
+      .insight-field-label {
+        margin-bottom: 6px;
+        color: var(--accent);
+        font: 700 10px/1.4 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .insight-claim {
+        margin: 0;
+        padding: 12px 15px;
+        color: var(--ink);
+        border-left: 2px solid var(--accent);
+        background: var(--accent-soft);
+        font-size: 16px;
+        line-height: 1.8;
+      }
+
+      .insight-field p {
+        margin: 0 0 10px;
+      }
+
+      .insight-field p:last-child {
+        margin-bottom: 0;
+      }
+
+      .editorial-section {
+        max-width: 720px;
+        margin-top: 8px;
+        padding: 28px 30px 12px;
+        border-top: 2px solid var(--ink);
+        background: var(--paper-deep);
+      }
+
+      .editorial-section .editorial-kicker {
+        margin-bottom: 16px;
+        color: var(--accent);
+        font: 700 10px/1.4 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .editorial-section p {
+        color: var(--ink-soft);
+        font-size: 16px;
+        line-height: 1.95;
+      }
+
+      .editorial-section p + p {
+        margin-top: 20px;
+      }
+
+      .insight-block .content-label:first-of-type { margin-top: 16px; }
+
+      .article-content ul {
+        margin: 0 0 24px;
+        padding-left: 22px;
+      }
+
+      .article-content li { margin: 8px 0; }
+
+      .article-aside {
+        align-self: start;
+        position: sticky;
+        top: 25px;
+        border-top: 1px solid var(--line);
+      }
+
+      .aside-block {
+        padding: 18px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .aside-label {
+        color: var(--muted);
+        font: 10px/1.4 "DM Mono", monospace;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .aside-block p {
+        margin-top: 9px;
+        color: var(--ink-soft);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .guest-name {
+        margin-top: 8px;
+        color: var(--ink);
+        font-size: 18px;
+        letter-spacing: -0.04em;
+        line-height: 1.3;
+      }
+
+      .tag-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 10px;
+      }
+
+      .tag {
+        padding: 5px 8px;
+        color: var(--muted);
+        border: 1px solid var(--line);
+        font: 10px/1.2 "DM Mono", monospace;
+      }
+
+      .loading,
+      .error {
+        padding: 80px 0;
+        color: var(--muted);
+      }
+
+      .error { color: var(--accent); }
+
+      footer {
+        padding: 22px 0 28px;
+        color: var(--muted);
+        border-top: 1px solid var(--line);
+        font-size: 11px;
+      }
+
+      .footer-inner {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+      }
+
+      @media (max-width: 800px) {
+        .article-shell {
+          grid-template-columns: 1fr;
+          gap: 42px;
+          padding-top: 54px;
+        }
+
+        .article-aside {
+          position: static;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 20px;
+        }
+      }
+
+      @media (max-width: 560px) {
+        .shell { width: min(100% - 30px, 1180px); }
+        .site-nav { padding-top: 17px; }
+        .article-shell { padding-bottom: 68px; }
+        h1 { font-size: 40px; }
+        .dek { font-size: 15px; }
+        .article-content { font-size: 15px; }
+        .article-content h2 { font-size: 22px; }
+        .article-content blockquote { font-size: 15px; }
+        .insight-block { padding: 18px 16px 3px; }
+        .article-content .section-intro { margin-left: 0; }
+        .insight-card { padding: 21px 17px 18px 57px; }
+        .insight-number { left: 17px; }
+        .insight-title { font-size: 17px; }
+        .insight-claim { font-size: 15px; }
+        .editorial-section { padding: 22px 18px 8px; }
+        .article-aside { display: block; }
+        .footer-inner { align-items: flex-start; flex-direction: column; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="topbar"><div class="shell">Long-form editorial / AI podcast intelligence</div></div>
+    <header class="shell site-nav">
+      <a class="brand" href="./index.html" aria-label="返回听见全球 AI 前沿首页">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>听见全球 AI 前沿<small>LISTENING TO THE FRONTIER</small></span>
+      </a>
+      <a class="back-link" href="./index.html">返回最新解读</a>
+    </header>
+
+    <main class="shell article-shell" id="article-root">
+      <div class="loading">正在加载解读文章…</div>
+    </main>
+
+    <footer>
+      <div class="shell footer-inner">
+        <span>听见全球 AI 前沿 · 让重要的对话留下来。</span>
+        <span>基于公开资料生成，经人工审核后发布。</span>
+      </div>
+    </footer>
+
+    <script>
+      const config = window.SITE_CONFIG || {};
+      const demoArticles = window.DEMO_ARTICLES || [];
+      const root = document.querySelector("#article-root");
+      const articleId = new URLSearchParams(window.location.search).get("id");
+
+      function escapeHtml(value) {
+        return String(value || "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
+
+      function formatDate(value) {
+        if (!value) return "DATE UNKNOWN";
+        return new Date(value).toISOString().slice(0, 10).replaceAll("-", ".");
+      }
+
+      function renderInlineMarkdown(value) {
+        return escapeHtml(value).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+      }
+
+      function renderMarkdown(value) {
+        const lines = String(value || "").split(/\r?\n/);
+        const output = [];
+        let listOpen = false;
+        let insightOpen = false;
+
+        const closeList = () => {
+          if (listOpen) {
+            output.push("</ul>");
+            listOpen = false;
+          }
+        };
+
+        const closeInsight = () => {
+          closeList();
+          if (insightOpen) {
+            output.push("</section>");
+            insightOpen = false;
+          }
+        };
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) {
+            closeList();
+            continue;
+          }
+          if (line.startsWith("## ")) {
+            closeInsight();
+            output.push(`<h2>${escapeHtml(line.slice(3))}</h2>`);
+          } else if (line.startsWith("### ")) {
+            closeInsight();
+            insightOpen = true;
+            output.push(`<section class="insight-block"><h3>${renderInlineMarkdown(line.slice(4))}</h3>`);
+          } else if (line === "---") {
+            closeInsight();
+            output.push("<hr />");
+          } else if (/^\*\*(核心论断|深层分析|战略价值)：\*\*$/.test(line)) {
+            closeList();
+            output.push(`<p class="content-label">${escapeHtml(line.replaceAll("*", ""))}</p>`);
+          } else if (line.startsWith("> ")) {
+            closeList();
+            output.push(`<blockquote>${renderInlineMarkdown(line.slice(2))}</blockquote>`);
+          } else if (line.startsWith("- ") || line.startsWith("* ") || line.startsWith("• ")) {
+            if (!listOpen) {
+              output.push("<ul>");
+              listOpen = true;
+            }
+            output.push(`<li>${escapeHtml(line.slice(2))}</li>`);
+          } else {
+            closeList();
+            output.push(`<p>${renderInlineMarkdown(line)}</p>`);
+          }
+        }
+        closeInsight();
+        return output.join("");
+      }
+
+      function normalizeInsight(point, index) {
+        if (point && typeof point === "object") {
+          return {
+            title: point.title || `洞察 ${index + 1}`,
+            claim: point.claim || point.core_claim || "",
+            analysis: point.analysis || point.deep_analysis || "",
+            value: point.value || point.strategic_value || "",
+          };
+        }
+        return {
+          title: String(point || `洞察 ${index + 1}`),
+          claim: "",
+          analysis: "",
+          value: "",
+        };
+      }
+
+      function normalizedInsights(article) {
+        const source = Array.isArray(article.insights) && article.insights.length
+          ? article.insights
+          : article.key_points || [];
+        return source.slice(0, 10).map(normalizeInsight);
+      }
+
+      function renderParagraphs(value) {
+        return String(value || "")
+          .split(/\n\s*\n/)
+          .map((paragraph) => paragraph.trim())
+          .filter(Boolean)
+          .map((paragraph) => `<p>${renderInlineMarkdown(paragraph.replaceAll("\n", " "))}</p>`)
+          .join("");
+      }
+
+      function renderStructuredInsights(insights) {
+        if (!insights.length) {
+          return '<p class="section-intro">公开材料暂未形成可展示的结构化洞察，内容仍需人工补充。</p>';
+        }
+
+        return `<div class="insights-list">${insights
+          .map((insight, index) => `
+            <section class="insight-card">
+              <div class="insight-number">${String(index + 1).padStart(2, "0")}</div>
+              <h3 class="insight-title">${escapeHtml(insight.title)}</h3>
+              <div class="insight-field">
+                <div class="insight-field-label">Core claim / 核心论断</div>
+                <blockquote class="insight-claim">${renderInlineMarkdown(insight.claim || "基于公开材料的谨慎转述，待人工核验。")}</blockquote>
+              </div>
+              <div class="insight-field">
+                <div class="insight-field-label">Deep analysis / 深层分析</div>
+                ${renderParagraphs(insight.analysis || "公开材料暂不足以展开更完整的分析。")}
+              </div>
+              <div class="insight-field">
+                <div class="insight-field-label">Strategic value / 战略价值</div>
+                ${renderParagraphs(insight.value || "这条洞察需要结合原始访谈进一步判断。")}
+              </div>
+            </section>
+          `)
+          .join("")}</div>`;
+      }
+
+      function renderStructuredArticle(article) {
+        const insights = normalizedInsights(article);
+        return [
+          `<h2>摘要</h2>${renderParagraphs(article.summary || "暂无摘要。")}`,
+          `<h2>嘉宾介绍</h2>${renderParagraphs(`${article.guest_name || "核心嘉宾待确认"}：${article.guest_intro || "公开资料未提供完整嘉宾介绍。"}`)}`,
+          '<h2>重要观点</h2><p class="section-intro">以下洞察均提取自受访者在访谈中的观点和判断。核心论断在没有逐字材料时使用谨慎转述，具体事实请以原始访谈为准。</p>',
+          renderStructuredInsights(insights),
+          `<section class="editorial-section"><div class="editorial-kicker">Editor’s reading / 编辑解读</div>${renderParagraphs(article.editorial_analysis || "暂无编辑解读。")}</section>`,
+          `<h2>原始链接</h2>${renderParagraphs(`原始访谈播放链接：${article.play_url || article.episode_url || "待人工补充"}`)}`,
+        ].join("");
+      }
+
+      function buildInsightMarkdown(points) {
+        return (points || [])
+          .map((point, index) => {
+            const insight = normalizeInsight(point, index);
+            return [
+              `### ${insight.title}`,
+              "**核心论断：**",
+              insight.claim ? `> ${insight.claim}` : "> 基于公开材料的核心判断，待人工核验。",
+              "**深层分析：**",
+              insight.analysis || "公开材料暂不足以展开更完整的分析。",
+              "**战略价值：**",
+              insight.value || "这条洞察需要结合原始访谈进一步判断。",
+            ].join("\n\n");
+          })
+          .join("\n\n---\n\n");
+      }
+
+      function renderArticle(article) {
+        const playUrl = article.play_url || article.episode_url || "";
+        const hasStructuredInsights = Array.isArray(article.insights) && article.insights.length > 0;
+        const content = hasStructuredInsights
+          ? renderStructuredArticle(article)
+          : renderMarkdown(article.content || buildFallbackContent(article));
+        root.innerHTML = `
+          <article class="article-main">
+            <span class="eyebrow">${escapeHtml(article.category || "AI editorial")}</span>
+            <h1>${escapeHtml(article.title)}</h1>
+            <p class="dek">${escapeHtml(article.summary || "")}</p>
+            <div class="article-meta">
+              <span>${escapeHtml(article.source_name || "Unknown source")}</span>
+              <span>${escapeHtml(formatDate(article.source_published_at || article.published_at))}</span>
+              <span>800+ 字结构化解读</span>
+            </div>
+            <section class="source-panel">
+              <div class="source-panel-label">Original interview / direct playback</div>
+              <h2>${escapeHtml(article.source_name || "原始节目")}</h2>
+              <p>打开本期访谈的单集播放页或音频直链，不跳转到频道主页。</p>
+              ${playUrl
+                ? `<a class="play-link" href="${escapeHtml(playUrl)}" target="_blank" rel="noreferrer">
+                    播放原始访谈
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                      <path d="M8 5v14l11-7z" />
+                    </svg>
+                  </a>`
+                : '<span class="play-link is-disabled">原始播放链接待人工补充</span>'}
+            </section>
+            <div class="article-content">${content}</div>
+          </article>
+          <aside class="article-aside">
+            <div class="aside-block">
+              <div class="aside-label">Guest</div>
+              <h2 class="guest-name">${escapeHtml(article.guest_name || "核心嘉宾待确认")}</h2>
+              <p>${escapeHtml(article.guest_intro || "公开资料未提供完整嘉宾介绍。")}</p>
+            </div>
+            <div class="aside-block">
+              <div class="aside-label">Topics</div>
+              <div class="tag-list">${(article.tags || []).map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+            </div>
+            <div class="aside-block">
+              <div class="aside-label">Editorial note</div>
+              <p>本文为基于公开节目资料生成的编辑解读，已保留原始访谈入口，建议结合原节目完整收听。</p>
+            </div>
+          </aside>
+        `;
+        document.title = `${article.title} | 听见全球 AI 前沿`;
+      }
+
+      function buildFallbackContent(article) {
+        return [
+          "## 摘要",
+          article.summary || "暂无摘要。",
+          "## 嘉宾介绍",
+          `${article.guest_name || "核心嘉宾待确认"}：${article.guest_intro || "公开资料未提供完整嘉宾介绍。"}`,
+          "## 重要观点",
+          buildInsightMarkdown(article.key_points),
+          "## 编辑解读",
+          article.editorial_analysis || "暂无编辑解读。",
+        ].join("\n\n");
+      }
+
+      async function loadArticle() {
+        if (!articleId) {
+          root.innerHTML = '<div class="error">没有找到这篇解读。请返回首页重新选择。</div>';
+          return;
+        }
+
+        const demoArticle = demoArticles.find((article) => article.id === articleId);
+        if (demoArticle) renderArticle(demoArticle);
+
+        if (!config.supabaseUrl || !config.supabaseAnonKey || !window.supabase) {
+          if (!demoArticle) root.innerHTML = '<div class="error">这篇文章暂时无法加载。</div>';
+          return;
+        }
+
+        const client = window.supabase.createClient(config.supabaseUrl, config.supabaseAnonKey);
+        const { data, error } = await client
+          .from("articles")
+          .select("id,title,summary,guest_name,guest_intro,key_points,insights,editorial_analysis,content,category,tags,source_name,source_url,episode_url,play_url,source_published_at,published_at,status")
+          .eq("id", articleId)
+          .eq("status", "published")
+          .maybeSingle();
+
+        if (!error && data) renderArticle(data);
+        else if (!demoArticle) root.innerHTML = '<div class="error">这篇文章暂时无法加载，请稍后再试。</div>';
+      }
+
+      void loadArticle();
+    </script>
+  </body>
+</html>

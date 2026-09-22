@@ -1,0 +1,233 @@
+[
+  {
+    "slug": "silicon-101",
+    "name": "硅谷101",
+    "platform": "Apple Podcasts",
+    "source_url": "https://podcasts.apple.com/us/podcast/%E7%A1%85%E8%B0%B7101/id1498541229",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI", "科技", "硅谷", "创业", "芯片", "机器人"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "zhang-xiaojun",
+    "name": "张小珺Jùn｜商业访谈录",
+    "platform": "小宇宙",
+    "source_url": "https://namecard.xiaoyuzhoufm.com/lxvkt",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI 创始人", "研究者", "科技巨头", "VC"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "crossing",
+    "name": "十字路口 Crossing",
+    "platform": "小宇宙",
+    "source_url": "https://www.xiaoyuzhoufm.com/podcast/60502e253c92d4f62c2a9577",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI 创业", "AI 产品", "Agent", "AI 应用"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "42chapters",
+    "name": "42章经",
+    "platform": "小宇宙",
+    "source_url": "https://www.xiaoyuzhoufm.com/podcast/648b0b641c48983391a63f98",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI 创业", "VC", "Infra", "模型", "应用"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "agi-insider",
+    "name": "AI局内人 | AGI Insider",
+    "platform": "小宇宙",
+    "source_url": "https://www.xiaoyuzhoufm.com/podcast/643928f99361a4e7c38a9555",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AGI", "模型", "产品", "商业模式"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "onboard",
+    "name": "OnBoard!",
+    "platform": "小宇宙",
+    "source_url": "https://www.xiaoyuzhoufm.com/podcast/61cbaac48bb4cd867fcabe22",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI", "中美科技", "出海", "投资", "具身智能"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "founder-park",
+    "name": "Founder Park / 极客公园",
+    "platform": "Founder Park",
+    "source_url": "https://www.founderpark.net/",
+    "feed_url": "",
+    "language": "zh-CN",
+    "focus": ["AI 创始人", "产品", "新技术", "AGI"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "nvidia-ai-cn",
+    "name": "NVIDIA AI 前沿 / NVIDIA AI 播客中文版",
+    "platform": "NVIDIA",
+    "source_url": "https://blogs.nvidia.cn/ai-podcast/",
+    "feed_url": "https://blogs.nvidia.cn/ai-podcast/feed/",
+    "language": "zh-CN",
+    "focus": ["GPU", "AI Infra", "Agent", "产业应用"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "dwarkesh",
+    "name": "Dwarkesh Podcast",
+    "platform": "Dwarkesh Podcast",
+    "source_url": "https://www.dwarkesh.com/",
+    "feed_url": "https://www.dwarkesh.com/feed",
+    "language": "en",
+    "focus": ["AGI", "Scaling", "AI Research", "AI Safety"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "no-priors",
+    "name": "No Priors",
+    "platform": "Apple Podcasts",
+    "source_url": "https://podcasts.apple.com/us/podcast/no-priors-artificial-intelligence-technology-startups/id1668002688",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["AI 创业", "模型", "研究", "投资"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "lex-fridman",
+    "name": "Lex Fridman Podcast",
+    "platform": "Lex Fridman",
+    "source_url": "https://lexfridman.com/podcast/",
+    "feed_url": "https://lexfridman.com/feed/podcast/",
+    "language": "en",
+    "focus": ["AI", "机器人", "计算机科学", "科技人物"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "latent-space",
+    "name": "Latent Space",
+    "platform": "Latent Space",
+    "source_url": "https://www.latent.space/",
+    "feed_url": "https://www.latent.space/feed",
+    "language": "en",
+    "focus": ["AI Engineering", "LLM", "Agent", "Infra"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "cognitive-revolution",
+    "name": "The Cognitive Revolution",
+    "platform": "The Cognitive Revolution",
+    "source_url": "https://www.cognitiverevolution.ai/",
+    "feed_url": "https://www.cognitiverevolution.ai/feed",
+    "language": "en",
+    "focus": ["Frontier AI", "AGI", "模型研究", "Alignment"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "mlst",
+    "name": "Machine Learning Street Talk",
+    "platform": "YouTube",
+    "source_url": "https://www.youtube.com/@MachineLearningStreetTalk",
+    "feed_url": "https://www.youtube.com/feeds/videos.xml?channel_id=UCMLtBahI5DMrt0NPvDSoIRQ",
+    "language": "en",
+    "focus": ["ML Research", "AGI", "认知科学", "数学"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "lennys-podcast",
+    "name": "Lenny's Podcast",
+    "platform": "Lenny's Newsletter",
+    "source_url": "https://www.lennysnewsletter.com/podcast",
+    "feed_url": "https://www.lennysnewsletter.com/feed",
+    "language": "en",
+    "focus": ["AI 产品", "创业", "产品管理"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "yc-lightcone",
+    "name": "Y Combinator / Lightcone Podcast",
+    "platform": "Y Combinator",
+    "source_url": "",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["AI 创业", "早期产品", "Founder 方法论"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "bg2pod",
+    "name": "BG2Pod",
+    "platform": "BG2Pod",
+    "source_url": "",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["资本市场", "AI 产业", "算力", "创业公司"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "openai-podcast",
+    "name": "The OpenAI Podcast",
+    "platform": "OpenAI",
+    "source_url": "",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["模型", "产品", "AI 研究", "技术建设"],
+    "priority": "A",
+    "enabled": true
+  },
+  {
+    "slug": "deepmind-podcast",
+    "name": "Google DeepMind: The Podcast",
+    "platform": "Google DeepMind",
+    "source_url": "",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["研究", "科学", "AI 产业影响"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "sequoia-capital",
+    "name": "Sequoia Capital",
+    "platform": "YouTube",
+    "source_url": "https://www.youtube.com/@sequoiacapital",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["AI 创业", "科技公司", "投资"],
+    "priority": "B",
+    "enabled": true
+  },
+  {
+    "slug": "ryan-peterman",
+    "name": "Ryan Peterman",
+    "platform": "YouTube",
+    "source_url": "https://www.youtube.com/@RyanLPeterman",
+    "feed_url": "",
+    "language": "en",
+    "focus": ["AI 产品", "创业", "技术"],
+    "priority": "C",
+    "enabled": true
+  }
+]
