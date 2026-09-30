@@ -16,7 +16,8 @@ const supabaseSecretKey = requiredEnvAny([
   "SUPABASE_SERVICE_ROLE_KEY",
 ]);
 const openaiApiKey = requiredEnv("OPENAI_API_KEY");
-const model = process.env.OPENAI_MODEL || "gpt-5-mini";
+const openaiBaseUrl = (process.env.OPENAI_BASE_URL || "").trim().replace(/\/+$/, "");
+const model = process.env.OPENAI_MODEL || (openaiBaseUrl ? "glm-5.3" : "gpt-5-mini");
 const lookbackHours = Number(process.env.LOOKBACK_HOURS || 36);
 const dailyLimit = Number(process.env.DAILY_ARTICLE_LIMIT || 10);
 const publicTextLimit = Number(process.env.PUBLIC_TEXT_LIMIT || 18_000);
@@ -24,7 +25,10 @@ const publicTextLimit = Number(process.env.PUBLIC_TEXT_LIMIT || 18_000);
 const supabase = createClient(supabaseUrl, supabaseSecretKey, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
-const openai = new OpenAI({ apiKey: openaiApiKey });
+const openai = new OpenAI({
+  apiKey: openaiApiKey,
+  ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
+});
 const parser = new XMLParser({
   ignoreAttributes: false,
   attributeNamePrefix: "@_",
@@ -59,6 +63,7 @@ const main = async () => {
       now: now.toISOString(),
       cutoff: cutoff.toISOString(),
       model,
+      openaiBaseUrl: openaiBaseUrl || "https://api.openai.com/v1",
       currentCount,
       dailyLimit,
       remaining,

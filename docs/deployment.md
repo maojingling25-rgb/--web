@@ -48,6 +48,17 @@ OPENAI_API_KEY
 不要把上述 Secret 写入仓库文件。尤其不要把 `SUPABASE_SECRET_KEY` 或 `OPENAI_API_KEY`
 放到 `public-config.js`、GitHub Variables、文章内容或聊天记录中。
 
+如果使用 MiraclePlus 代理平台，`OPENAI_API_KEY` 填代理平台生成的 Key，不是 OpenAI
+官方 Key。再在 GitHub Actions Variables 中添加：
+
+```text
+OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
+OPENAI_MODEL=glm-5.3
+```
+
+当前流水线使用 OpenAI Responses API；模型需要支持 `openai-response`。代理平台的
+`/keys` 是密钥管理页面，不是 API Base URL。
+
 ## 3. GitHub Actions Variables
 
 添加以下 Variables：
@@ -55,6 +66,7 @@ OPENAI_API_KEY
 ```text
 PUBLIC_SUPABASE_URL
 PUBLIC_SUPABASE_PUBLISHABLE_KEY
+OPENAI_BASE_URL
 OPENAI_MODEL
 LOOKBACK_HOURS
 DAILY_ARTICLE_LIMIT
@@ -66,7 +78,8 @@ PUBLIC_TEXT_LIMIT
 ```text
 PUBLIC_SUPABASE_URL=https://awsewasitgfsjymnekyl.supabase.co
 PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
-OPENAI_MODEL=gpt-5-mini
+OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
+OPENAI_MODEL=glm-5.3
 LOOKBACK_HOURS=36
 DAILY_ARTICLE_LIMIT=10
 PUBLIC_TEXT_LIMIT=18000

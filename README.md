@@ -68,17 +68,22 @@ OPENAI_API_KEY
 ```text
 PUBLIC_SUPABASE_URL
 PUBLIC_SUPABASE_PUBLISHABLE_KEY
+OPENAI_BASE_URL
 OPENAI_MODEL
 LOOKBACK_HOURS
 DAILY_ARTICLE_LIMIT
 PUBLIC_TEXT_LIMIT
 ```
 
-推荐 Demo 阶段的 `OPENAI_MODEL`：
+当前代理平台配置：
 
 ```text
-gpt-5-mini
+OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
+OPENAI_MODEL=glm-5.3
 ```
+
+`OPENAI_BASE_URL` 是代理的接口地址，不是 `/keys` 管理页面。`glm-5.3` 已通过
+Responses API 测试。若改用其他模型，必须确认该模型支持 `openai-response`。
 
 如果 GitHub 仓库使用项目 Pages 地址，Supabase Authentication → URL Configuration
 至少加入以下地址（把占位符替换成真实仓库信息）：

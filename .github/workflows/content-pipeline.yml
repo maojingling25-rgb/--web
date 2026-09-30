@@ -35,7 +35,8 @@ jobs:
           SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-          OPENAI_MODEL: ${{ vars.OPENAI_MODEL }}
+          OPENAI_BASE_URL: ${{ vars.OPENAI_BASE_URL || 'https://openai-proxy.miracleplus.com/v1' }}
+          OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-5.3' }}
           LOOKBACK_HOURS: ${{ vars.LOOKBACK_HOURS || '36' }}
           DAILY_ARTICLE_LIMIT: ${{ vars.DAILY_ARTICLE_LIMIT || '10' }}
           PUBLIC_TEXT_LIMIT: ${{ vars.PUBLIC_TEXT_LIMIT || '18000' }}
