@@ -105,6 +105,7 @@ git push -u origin main
 
 - `pages.yml` 在推送到 `main` 后部署静态网站。
 - `content-pipeline.yml` 每天 08:00 和 20:00（北京时间）运行。
+- 内容流水线单次任务最长运行 60 分钟；代理模型生成较慢时，GitHub Actions 不会在 20 分钟处提前取消。
 - 也可以在 `Actions` 页面手动运行 `Update podcast intelligence`。
 
 ## 5. 人工审核流程

@@ -102,6 +102,7 @@ GitHub Pages 的 Source 选择 `GitHub Actions`。首次部署前，先在 Supab
 
 - 每天北京时间 08:00 和 20:00 运行。
 - 每天最多生成 10 条草稿。
+- GitHub Actions 单次任务最长运行 60 分钟，以适配代理模型较慢时的生成耗时。
 - 只处理 `config/sources.json` 中 `enabled = true` 且存在 `feed_url` 的来源。
 - 新内容先进入 `draft`，公开前台只读取 `published`。
 - 生成内容必须包含：摘要、嘉宾介绍、重要观点、编辑解读、原始链接。
