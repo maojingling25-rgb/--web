@@ -70,6 +70,7 @@ PUBLIC_SUPABASE_URL
 PUBLIC_SUPABASE_PUBLISHABLE_KEY
 OPENAI_BASE_URL
 OPENAI_MODEL
+OPENAI_REQUEST_TIMEOUT_MS
 LOOKBACK_HOURS
 DAILY_ARTICLE_LIMIT
 PUBLIC_TEXT_LIMIT
@@ -80,10 +81,12 @@ PUBLIC_TEXT_LIMIT
 ```text
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
+OPENAI_REQUEST_TIMEOUT_MS=600000
 ```
 
 `OPENAI_BASE_URL` 是代理的接口地址，不是 `/keys` 管理页面。`glm-5.3` 已通过
 Responses API 测试。若改用其他模型，必须确认该模型支持 `openai-response`。
+`OPENAI_REQUEST_TIMEOUT_MS` 是单篇 AI 生成请求的超时时间，默认 10 分钟。
 
 如果 GitHub 仓库使用项目 Pages 地址，Supabase Authentication → URL Configuration
 至少加入以下地址（把占位符替换成真实仓库信息）：
@@ -103,6 +106,7 @@ GitHub Pages 的 Source 选择 `GitHub Actions`。首次部署前，先在 Supab
 - 每天北京时间 08:00 和 20:00 运行。
 - 每天最多生成 10 条草稿。
 - GitHub Actions 单次任务最长运行 60 分钟，以适配代理模型较慢时的生成耗时。
+- 单篇生成失败会记录为 `item_failed`，不会跳过同一来源里的其他节目。
 - 只处理 `config/sources.json` 中 `enabled = true` 且存在 `feed_url` 的来源。
 - 新内容先进入 `draft`，公开前台只读取 `published`。
 - 生成内容必须包含：摘要、嘉宾介绍、重要观点、编辑解读、原始链接。
