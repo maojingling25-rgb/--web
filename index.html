@@ -966,6 +966,10 @@
         line-height: 1.04;
       }
 
+      .hero-title-line {
+        display: block;
+      }
+
       .hero-lede {
         max-width: 500px;
         margin-top: 24px;
@@ -974,7 +978,13 @@
         line-height: 1.75;
       }
 
+      .hero-lede-break {
+        display: block;
+      }
+
       .hero-lede em {
+        display: inline-block;
+        margin-top: 2px;
         padding: 0 2px;
         color: var(--ink);
         background: transparent;
@@ -1175,11 +1185,13 @@
         grid-column: span 4;
         min-width: 0;
         min-height: 0;
-        padding: 22px 0 24px;
-        border: 0;
+        padding: 22px 18px 24px;
+        border: 1px solid transparent;
         border-bottom: 1px solid var(--line);
         background: transparent;
         box-shadow: none;
+        transition: border-color 180ms ease, background 180ms ease, box-shadow 180ms ease,
+          transform 180ms ease;
       }
 
       .story-card:first-child .story-title,
@@ -1195,9 +1207,10 @@
 
       .story-card:hover,
       .story-card:first-child:hover {
-        background: transparent;
-        box-shadow: none;
-        transform: none;
+        border-color: var(--line);
+        background: var(--white);
+        box-shadow: 0 14px 34px rgba(32, 33, 31, 0.08);
+        transform: translateY(-5px);
       }
 
       .story-card:hover .story-title {
@@ -1217,10 +1230,10 @@
       .story-card:not(:first-child) .story-title {
         max-width: 780px;
         margin-top: 21px;
-        font-size: clamp(22px, 2.8vw, 31px);
+        font-size: clamp(19px, 2.1vw, 24px);
         font-weight: 700;
         letter-spacing: 0;
-        line-height: 1.18;
+        line-height: 1.28;
       }
 
       .story-excerpt,
@@ -1349,6 +1362,8 @@
         .story-card:nth-child(2) {
           min-height: 0;
           margin-bottom: 0;
+          padding-right: 14px;
+          padding-left: 14px;
         }
 
         .newsletter-inner {
@@ -1385,9 +1400,14 @@
       <section class="shell hero">
         <div class="hero-copy reveal">
           <span class="eyebrow">AI media intelligence / 001</span>
-          <h1>把值得听的 AI 对话，变成值得读的观点。</h1>
+          <h1>
+            <span class="hero-title-line">把值得听的 AI 对话</span>
+            <span class="hero-title-line">变成值得读的观点。</span>
+          </h1>
           <p class="hero-lede">
-            从全球播客、访谈与长对话中，筛出真正重要的想法。<em>少一点噪音，多一点判断。</em>
+            从全球播客、访谈与长对话中，筛出真正重要的想法。<span class="hero-lede-break">
+              <em>少一点噪音，多一点判断。</em>
+            </span>
           </p>
           <div class="hero-actions">
             <a class="button-primary" href="#latest">
