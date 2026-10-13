@@ -23,6 +23,12 @@
         --accent: #a9473c;
         --good: #34694f;
         --bad: #9a3e35;
+        --draft: #b43d34;
+        --draft-bg: #fbefed;
+        --published: #2f6b4f;
+        --published-bg: #edf6f0;
+        --offline: #74776f;
+        --offline-bg: #f0f1ed;
       }
 
       * {
@@ -61,7 +67,7 @@
         color: var(--muted);
         border-bottom: 1px solid var(--line);
         font: 10px/1.3 "DM Mono", monospace;
-        letter-spacing: 0.07em;
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -83,13 +89,14 @@
 
       h1 {
         font-size: clamp(28px, 4vw, 46px);
-        letter-spacing: -0.08em;
+        letter-spacing: 0;
         line-height: 1;
       }
 
       h2 {
         font-size: 22px;
-        letter-spacing: -0.05em;
+        letter-spacing: 0;
+        line-height: 1.35;
       }
 
       .header-meta {
@@ -132,6 +139,7 @@
       input,
       textarea,
       select {
+        min-width: 0;
         width: 100%;
         padding: 11px 12px;
         color: var(--ink);
@@ -206,8 +214,9 @@
 
       .workspace {
         display: none;
-        grid-template-columns: 280px minmax(0, 1fr);
+        grid-template-columns: 300px minmax(0, 1fr);
         gap: 28px;
+        overflow: hidden;
       }
 
       .workspace.is-visible {
@@ -215,6 +224,7 @@
       }
 
       .queue {
+        min-width: 0;
         border-right: 1px solid var(--line);
         padding-right: 22px;
       }
@@ -238,34 +248,75 @@
       }
 
       .queue-item {
+        position: relative;
+        min-width: 0;
         width: 100%;
-        padding: 12px;
+        padding: 13px 14px;
         color: var(--ink);
         border: 1px solid var(--line);
+        border-left-width: 4px;
         background: var(--paper);
         text-align: left;
       }
 
       .queue-item.is-selected {
-        border-color: var(--accent);
-        background: #f4eae7;
+        box-shadow: inset 0 0 0 2px var(--ink);
+      }
+
+      .queue-item[data-status="draft"] {
+        border-left-color: var(--draft);
+        background: var(--draft-bg);
+      }
+
+      .queue-item[data-status="published"] {
+        border-left-color: var(--published);
+        background: var(--published-bg);
+      }
+
+      .queue-item[data-status="offline"] {
+        border-left-color: var(--offline);
+        background: var(--offline-bg);
       }
 
       .queue-item strong {
-        display: block;
+        display: -webkit-box;
         overflow: hidden;
         font-size: 12px;
         font-weight: 700;
         line-height: 1.45;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
       }
 
       .queue-item small {
-        display: block;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
         margin-top: 6px;
         color: var(--muted);
         font: 10px/1.35 "DM Mono", monospace;
+      }
+
+      .status-pill {
+        padding: 2px 6px;
+        border: 1px solid currentColor;
+        font-family: "Noto Sans SC", sans-serif;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+
+      .status-pill.is-draft {
+        color: var(--draft);
+      }
+
+      .status-pill.is-published {
+        color: var(--published);
+      }
+
+      .status-pill.is-offline {
+        color: var(--offline);
       }
 
       .empty {
@@ -286,6 +337,15 @@
         margin-bottom: 22px;
       }
 
+      .editor-head > div:first-child {
+        min-width: 0;
+        flex: 1;
+      }
+
+      .editor-head h2 {
+        overflow-wrap: anywhere;
+      }
+
       .editor-head p {
         margin-top: 7px;
         color: var(--muted);
@@ -303,6 +363,10 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 16px;
+      }
+
+      .field-grid > label {
+        min-width: 0;
       }
 
       label {
@@ -327,9 +391,10 @@
         display: none !important;
       }
 
-      @media (max-width: 820px) {
+      @media (max-width: 1020px) {
         .workspace {
           grid-template-columns: 1fr;
+          overflow: visible;
         }
 
         .queue {
@@ -337,6 +402,10 @@
           padding-bottom: 22px;
           border-right: 0;
           border-bottom: 1px solid var(--line);
+        }
+
+        .queue-list {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
@@ -367,6 +436,19 @@
 
         .field-full {
           grid-column: auto;
+        }
+
+        .queue-list {
+          grid-template-columns: 1fr;
+        }
+
+        .editor-head {
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .editor-actions {
+          justify-content: start;
         }
       }
     </style>
@@ -405,14 +487,14 @@
             <span class="queue-count" id="queue-count">0 条</span>
           </div>
           <div class="queue-list" id="queue-list"></div>
-          <div class="empty hidden" id="queue-empty">当前没有待处理内容。</div>
+          <div class="empty hidden" id="queue-empty">审核队列暂无内容。</div>
         </aside>
 
         <section class="editor">
           <div class="editor-head">
             <div>
               <h2 id="editor-title">选择一篇内容</h2>
-              <p id="editor-meta">草稿和已发布内容都会显示在这里。</p>
+              <p id="editor-meta">待审核、已发布和已下线内容都会显示在这里。</p>
             </div>
             <div class="editor-actions">
               <button class="secondary" id="refresh-button" type="button">刷新</button>
@@ -538,6 +620,24 @@
         return articles.find((article) => article.id === selectedId);
       }
 
+      function statusLabel(status) {
+        return {
+          draft: "待审核",
+          published: "已发布",
+          offline: "已下线",
+          rejected: "已拒绝",
+        }[status] || status || "未知状态";
+      }
+
+      function sortArticles(items) {
+        const statusOrder = { draft: 0, published: 1, offline: 2 };
+        return [...items].sort(
+          (a, b) =>
+            (statusOrder[a.status] ?? 9) - (statusOrder[b.status] ?? 9) ||
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+        );
+      }
+
       function renderQueue() {
         queueList.replaceChildren();
         queueCount.textContent = `${articles.length} 条`;
@@ -547,7 +647,15 @@
           const button = document.createElement("button");
           button.className = `queue-item ${article.id === selectedId ? "is-selected" : ""}`;
           button.type = "button";
-          button.innerHTML = `<strong>${escapeHtml(article.title)}</strong><small>${escapeHtml(article.status)} · ${escapeHtml(article.source_name)}</small>`;
+          button.dataset.status = article.status;
+          button.title = article.title || "未命名内容";
+          button.innerHTML = [
+            `<strong>${escapeHtml(article.title)}</strong>`,
+            "<small>",
+            `<span class="status-pill is-${escapeHtml(article.status)}">${escapeHtml(statusLabel(article.status))}</span>`,
+            `<span>${escapeHtml(article.source_name)}</span>`,
+            "</small>",
+          ].join("");
           button.addEventListener("click", () => {
             selectedId = article.id;
             renderQueue();
@@ -563,13 +671,13 @@
           document.querySelector("#article-form").reset();
           fields.source.removeAttribute("href");
           document.querySelector("#editor-title").textContent = "选择一篇内容";
-          document.querySelector("#editor-meta").textContent = "草稿和已发布内容都会显示在这里。";
+          document.querySelector("#editor-meta").textContent = "待审核、已发布和已下线内容都会显示在这里。";
           return;
         }
 
         document.querySelector("#editor-title").textContent = article.title;
         document.querySelector("#editor-meta").textContent =
-          `${article.status} · ${article.source_name} · ${formatDate(article.created_at)}`;
+          `${statusLabel(article.status)} · ${article.source_name} · ${formatDate(article.created_at)}`;
         fields.title.value = article.title || "";
         fields.category.value = article.category || "模型与产品";
         fields.tags.value = (article.tags || []).join(", ");
@@ -590,11 +698,11 @@
         const { data, error } = await client
           .from("articles")
           .select("*")
-          .in("status", ["draft", "published"])
+          .in("status", ["draft", "published", "offline"])
           .order("created_at", { ascending: false });
 
         if (error) throw error;
-        articles = data || [];
+        articles = sortArticles(data || []);
         selectedId = articles[0]?.id || null;
         renderQueue();
         renderEditor();
@@ -668,9 +776,11 @@
         window.location.reload();
       });
 
-      document.querySelector("#save-button").addEventListener("click", () => updateArticle("draft", "edit"));
+      document.querySelector("#save-button").addEventListener("click", () => {
+        updateArticle(selectedArticle()?.status || "draft", "edit");
+      });
       document.querySelector("#publish-button").addEventListener("click", () => updateArticle("published", "publish"));
-      document.querySelector("#unpublish-button").addEventListener("click", () => updateArticle("draft", "unpublish"));
+      document.querySelector("#unpublish-button").addEventListener("click", () => updateArticle("offline", "unpublish"));
       document.querySelector("#reject-button").addEventListener("click", () => updateArticle("rejected", "reject"));
 
       async function updateArticle(status, action) {
@@ -697,8 +807,8 @@
           setStatus(editorStatus, "核心嘉宾应填写输出主要观点的人物姓名，不要填写频道、节目、主持人或制作机构。", "error");
           return;
         }
-        if (/(播客|频道|节目|媒体|主持人|制作机构|podcast|channel|show|host)/i.test(guestIntro)) {
-          setStatus(editorStatus, "嘉宾介绍应只描述人物本人，不要介绍频道、播客、主持人或节目。", "error");
+        if (guestName !== "待人工确认" && !guestIntro.includes(guestName)) {
+          setStatus(editorStatus, "嘉宾介绍中需要明确包含上方填写的嘉宾姓名。", "error");
           return;
         }
 
@@ -749,7 +859,8 @@
           play_url: fields.playUrl.value.trim() || fields.episodeUrl.value.trim() || null,
           status,
           updated_at: new Date().toISOString(),
-          published_at: status === "published" ? new Date().toISOString() : null,
+          published_at:
+            status === "published" ? article.published_at || new Date().toISOString() : article.published_at,
         };
 
         const { data, error } = await client
@@ -771,10 +882,20 @@
           actor_email: currentUserEmail,
         });
 
-        articles = articles.map((item) => (item.id === data.id ? data : item));
+        if (status === "rejected") {
+          articles = articles.filter((item) => item.id !== data.id);
+          selectedId = articles[0]?.id || null;
+        } else {
+          articles = sortArticles(articles.map((item) => (item.id === data.id ? data : item)));
+        }
         renderQueue();
         renderEditor();
-        setStatus(editorStatus, status === "published" ? "已发布到公开网站。" : "已保存。", "success");
+        const successMessage = {
+          published: "已发布到公开网站。",
+          offline: "已下线，公开网站将不再显示这篇内容。",
+          rejected: "已拒绝并移出审核队列。",
+        }[status] || "已保存。";
+        setStatus(editorStatus, successMessage, "success");
       }
 
       function formatDate(value) {

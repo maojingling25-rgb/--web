@@ -74,6 +74,10 @@ OPENAI_REQUEST_TIMEOUT_MS
 LOOKBACK_HOURS
 DAILY_ARTICLE_LIMIT
 PUBLIC_TEXT_LIMIT
+MAX_AI_ATTEMPTS
+MAX_ITEMS_PER_SOURCE
+PIPELINE_TIME_BUDGET_MS
+FAILED_ITEM_RETRY_HOURS
 ```
 
 当前代理平台配置：
@@ -81,12 +85,15 @@ PUBLIC_TEXT_LIMIT
 ```text
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=600000
+OPENAI_REQUEST_TIMEOUT_MS=90000
+MAX_AI_ATTEMPTS=4
+MAX_ITEMS_PER_SOURCE=1
+PIPELINE_TIME_BUDGET_MS=720000
 ```
 
 `OPENAI_BASE_URL` 是代理的接口地址，不是 `/keys` 管理页面。`glm-5.3` 已通过
-Responses API 测试。若改用其他模型，必须确认该模型支持 `openai-response`。
-`OPENAI_REQUEST_TIMEOUT_MS` 是单篇 AI 生成请求的超时时间，默认 10 分钟。
+OpenAI 兼容接口测试。若改用其他模型，必须确认该模型支持 Chat Completions。
+`OPENAI_REQUEST_TIMEOUT_MS` 是单篇 AI 生成请求的超时时间，默认 90 秒。
 
 如果 GitHub 仓库使用项目 Pages 地址，Supabase Authentication → URL Configuration
 至少加入以下地址（把占位符替换成真实仓库信息）：
@@ -104,9 +111,11 @@ GitHub Pages 的 Source 选择 `GitHub Actions`。首次部署前，先在 Supab
 ## 自动更新规则
 
 - 每天北京时间 08:00 和 20:00 运行。
-- 每天最多生成 10 条草稿。
+- Demo 默认每天最多生成 3 条草稿。
 - GitHub Actions 单次任务最长运行 60 分钟，以适配代理模型较慢时的生成耗时。
-- 单篇生成失败会记录为 `item_failed`，不会跳过同一来源里的其他节目。
+- 流水线自身默认运行预算为 12 分钟，最多尝试 4 次 AI 生成，每个来源最多选择 1 条候选。
+- 单篇生成失败会记录为 `item_failed`，并在 24 小时内跳过该条目，避免重复超时。
+- 标题以 `[AINews]` 开头的新闻简报不会进入播客解读流程。
 - 只处理 `config/sources.json` 中 `enabled = true` 且存在 `feed_url` 的来源。
 - 新内容先进入 `draft`，公开前台只读取 `published`。
 - 生成内容必须包含：摘要、嘉宾介绍、重要观点、编辑解读、原始链接。
@@ -155,3 +164,7 @@ git push origin main
 
 推送后，GitHub Pages 会重新部署静态前台，GitHub Actions 的下一次任务会使用新流水线。
 数据库迁移不会因 `git push` 自动执行，必须单独在 Supabase SQL Editor 执行。
+仓库只保留 `.github/workflows/pages.yml` 负责 Pages 部署，避免多个 Workflow 互相覆盖运行时配置。
+
+审核后台的“下线”状态需要数据库接受 `offline`。更新本版本时，请在 Supabase SQL Editor
+执行 `supabase/migrations/20261013_add_offline_article_status.sql`，再部署前端代码。

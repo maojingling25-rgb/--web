@@ -37,8 +37,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           OPENAI_BASE_URL: ${{ vars.OPENAI_BASE_URL || 'https://openai-proxy.miracleplus.com/v1' }}
           OPENAI_MODEL: ${{ vars.OPENAI_MODEL || 'glm-5.3' }}
-          OPENAI_REQUEST_TIMEOUT_MS: ${{ vars.OPENAI_REQUEST_TIMEOUT_MS || '600000' }}
-          LOOKBACK_HOURS: ${{ vars.LOOKBACK_HOURS || '36' }}
-          DAILY_ARTICLE_LIMIT: ${{ vars.DAILY_ARTICLE_LIMIT || '10' }}
-          PUBLIC_TEXT_LIMIT: ${{ vars.PUBLIC_TEXT_LIMIT || '18000' }}
+          OPENAI_REQUEST_TIMEOUT_MS: ${{ vars.OPENAI_REQUEST_TIMEOUT_MS || '90000' }}
+          LOOKBACK_HOURS: ${{ vars.LOOKBACK_HOURS || '336' }}
+          DAILY_ARTICLE_LIMIT: ${{ vars.DAILY_ARTICLE_LIMIT || '3' }}
+          PUBLIC_TEXT_LIMIT: ${{ vars.PUBLIC_TEXT_LIMIT || '6000' }}
+          MAX_AI_ATTEMPTS: ${{ vars.MAX_AI_ATTEMPTS || '4' }}
+          MAX_ITEMS_PER_SOURCE: ${{ vars.MAX_ITEMS_PER_SOURCE || '1' }}
+          PIPELINE_TIME_BUDGET_MS: ${{ vars.PIPELINE_TIME_BUDGET_MS || '720000' }}
+          FAILED_ITEM_RETRY_HOURS: ${{ vars.FAILED_ITEM_RETRY_HOURS || '24' }}
         run: npm run pipeline

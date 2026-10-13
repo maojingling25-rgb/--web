@@ -54,10 +54,10 @@ OPENAI_API_KEY
 ```text
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=600000
+OPENAI_REQUEST_TIMEOUT_MS=90000
 ```
 
-当前流水线使用 OpenAI Responses API；模型需要支持 `openai-response`。代理平台的
+当前流水线使用 OpenAI Chat Completions API；模型需要支持 OpenAI 兼容的聊天接口。代理平台的
 `/keys` 是密钥管理页面，不是 API Base URL。
 
 ## 3. GitHub Actions Variables
@@ -73,6 +73,10 @@ OPENAI_REQUEST_TIMEOUT_MS
 LOOKBACK_HOURS
 DAILY_ARTICLE_LIMIT
 PUBLIC_TEXT_LIMIT
+MAX_AI_ATTEMPTS
+MAX_ITEMS_PER_SOURCE
+PIPELINE_TIME_BUDGET_MS
+FAILED_ITEM_RETRY_HOURS
 ```
 
 推荐值：
@@ -82,10 +86,14 @@ PUBLIC_SUPABASE_URL=https://awsewasitgfsjymnekyl.supabase.co
 PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=600000
-LOOKBACK_HOURS=36
-DAILY_ARTICLE_LIMIT=10
-PUBLIC_TEXT_LIMIT=18000
+OPENAI_REQUEST_TIMEOUT_MS=90000
+LOOKBACK_HOURS=336
+DAILY_ARTICLE_LIMIT=3
+PUBLIC_TEXT_LIMIT=6000
+MAX_AI_ATTEMPTS=4
+MAX_ITEMS_PER_SOURCE=1
+PIPELINE_TIME_BUDGET_MS=720000
+FAILED_ITEM_RETRY_HOURS=24
 ```
 
 Publishable key 可以出现在静态网站中。它不等于 Secret key，数据库安全依赖
@@ -106,7 +114,7 @@ git push -u origin main
 
 仓库的 `Settings → Pages → Source` 选择 `GitHub Actions`。之后：
 
-- `pages.yml` 在推送到 `main` 后部署静态网站。
+- `pages.yml` 是唯一的 GitHub Pages 部署流程，会在推送到 `main` 后写入公开 Supabase 配置并部署静态网站。
 - `content-pipeline.yml` 每天 08:00 和 20:00（北京时间）运行。
 - 内容流水线单次任务最长运行 60 分钟；代理模型生成较慢时，GitHub Actions 不会在 20 分钟处提前取消。
 - 单篇 AI 生成请求默认最多等待 10 分钟；失败会跳过该篇并继续处理同一来源的其他节目。

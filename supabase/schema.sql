@@ -43,7 +43,7 @@ create table if not exists public.source_items (
 create table if not exists public.articles (
   id uuid primary key default gen_random_uuid(),
   source_item_id uuid unique references public.source_items(id) on delete set null,
-  status text not null default 'draft' check (status in ('draft', 'published', 'rejected')),
+  status text not null default 'draft' check (status in ('draft', 'published', 'offline', 'rejected')),
   title text not null,
   summary text not null default '',
   guest_name text not null default '',
@@ -88,6 +88,10 @@ alter table public.articles add column if not exists guest_name text not null de
 alter table public.articles add column if not exists insights jsonb not null default '[]'::jsonb;
 alter table public.articles add column if not exists episode_url text;
 alter table public.articles add column if not exists play_url text;
+
+alter table public.articles drop constraint if exists articles_status_check;
+alter table public.articles
+  add constraint articles_status_check check (status in ('draft', 'published', 'offline', 'rejected'));
 
 create index if not exists source_items_published_at_idx on public.source_items (published_at desc);
 create index if not exists articles_status_published_at_idx on public.articles (status, published_at desc);
