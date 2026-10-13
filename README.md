@@ -7,7 +7,7 @@
 - 公开前台：`index.html`，展示最新解读、搜索、主题筛选和原始链接。
 - 审核后台：`admin.html`，管理员邮箱 Magic Link 登录后编辑、发布、拒绝、下线文章。
 - 数据库：Supabase PostgreSQL，保存频道、来源条目、生成后的解读和审核记录。
-- 后台任务：GitHub Actions 每天北京时间 08:00 和 20:00 自动运行。
+- 后台任务：GitHub Actions 每 4 小时自动运行一次，默认每次生成 1 篇待审核草稿。
 - AI：OpenAI API。完整公开正文或字幕只在生成草稿时临时读取，不长期保存。
 
 ## 本地预览
@@ -85,15 +85,18 @@ FAILED_ITEM_RETRY_HOURS
 ```text
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=90000
-MAX_AI_ATTEMPTS=4
+OPENAI_REQUEST_TIMEOUT_MS=300000
+MAX_AI_ATTEMPTS=2
 MAX_ITEMS_PER_SOURCE=1
 PIPELINE_TIME_BUDGET_MS=720000
+DAILY_ARTICLE_LIMIT=1
+PUBLIC_TEXT_LIMIT=1500
+FAILED_ITEM_RETRY_HOURS=0
 ```
 
 `OPENAI_BASE_URL` 是代理的接口地址，不是 `/keys` 管理页面。`glm-5.3` 已通过
 OpenAI 兼容接口测试。若改用其他模型，必须确认该模型支持 Chat Completions。
-`OPENAI_REQUEST_TIMEOUT_MS` 是单篇 AI 生成请求的超时时间，默认 90 秒。
+`OPENAI_REQUEST_TIMEOUT_MS` 是单篇 AI 生成请求的超时时间，当前 Demo 默认 5 分钟。
 
 如果 GitHub 仓库使用项目 Pages 地址，Supabase Authentication → URL Configuration
 至少加入以下地址（把占位符替换成真实仓库信息）：
@@ -110,11 +113,11 @@ GitHub Pages 的 Source 选择 `GitHub Actions`。首次部署前，先在 Supab
 
 ## 自动更新规则
 
-- 每天北京时间 08:00 和 20:00 运行。
-- Demo 默认每天最多生成 3 条草稿。
+- 每 4 小时运行一次，约为北京时间 00:00、04:00、08:00、12:00、16:00、20:00。
+- Demo 默认每次最多生成 1 条草稿，用更高频率替代单次批量生成。
 - GitHub Actions 单次任务最长运行 60 分钟，以适配代理模型较慢时的生成耗时。
-- 流水线自身默认运行预算为 12 分钟，最多尝试 4 次 AI 生成，每个来源最多选择 1 条候选。
-- 单篇生成失败会记录为 `item_failed`，并在 24 小时内跳过该条目，避免重复超时。
+- 流水线自身默认运行预算为 12 分钟，最多尝试 2 次 AI 生成，每个来源最多选择 1 条候选。
+- 单篇生成失败会记录为 `item_failed`；Demo 默认允许下次运行继续重试，便于快速验证链路。
 - 标题以 `[AINews]` 开头的新闻简报不会进入播客解读流程。
 - 只处理 `config/sources.json` 中 `enabled = true` 且存在 `feed_url` 的来源。
 - 新内容先进入 `draft`，公开前台只读取 `published`。

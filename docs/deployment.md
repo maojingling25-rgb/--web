@@ -4,7 +4,7 @@
 
 - GitHub Pages：公开首页、文章页和管理员审核页。
 - Supabase：文章、来源、审核记录、订阅邮箱和 Magic Link 登录。
-- GitHub Actions：每天北京时间 08:00 和 20:00 采集公开来源并生成待审核草稿。
+- GitHub Actions：每 4 小时采集公开来源并生成 1 篇待审核草稿。
 
 ## 1. Supabase
 
@@ -54,7 +54,7 @@ OPENAI_API_KEY
 ```text
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=90000
+OPENAI_REQUEST_TIMEOUT_MS=300000
 ```
 
 当前流水线使用 OpenAI Chat Completions API；模型需要支持 OpenAI 兼容的聊天接口。代理平台的
@@ -86,14 +86,14 @@ PUBLIC_SUPABASE_URL=https://awsewasitgfsjymnekyl.supabase.co
 PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 OPENAI_BASE_URL=https://openai-proxy.miracleplus.com/v1
 OPENAI_MODEL=glm-5.3
-OPENAI_REQUEST_TIMEOUT_MS=90000
+OPENAI_REQUEST_TIMEOUT_MS=300000
 LOOKBACK_HOURS=336
-DAILY_ARTICLE_LIMIT=3
-PUBLIC_TEXT_LIMIT=6000
-MAX_AI_ATTEMPTS=4
+DAILY_ARTICLE_LIMIT=1
+PUBLIC_TEXT_LIMIT=1500
+MAX_AI_ATTEMPTS=2
 MAX_ITEMS_PER_SOURCE=1
 PIPELINE_TIME_BUDGET_MS=720000
-FAILED_ITEM_RETRY_HOURS=24
+FAILED_ITEM_RETRY_HOURS=0
 ```
 
 Publishable key 可以出现在静态网站中。它不等于 Secret key，数据库安全依赖
@@ -115,9 +115,9 @@ git push -u origin main
 仓库的 `Settings → Pages → Source` 选择 `GitHub Actions`。之后：
 
 - `pages.yml` 是唯一的 GitHub Pages 部署流程，会在推送到 `main` 后写入公开 Supabase 配置并部署静态网站。
-- `content-pipeline.yml` 每天 08:00 和 20:00（北京时间）运行。
+- `content-pipeline.yml` 每 4 小时运行一次，约为北京时间 00:00、04:00、08:00、12:00、16:00、20:00。
 - 内容流水线单次任务最长运行 60 分钟；代理模型生成较慢时，GitHub Actions 不会在 20 分钟处提前取消。
-- 单篇 AI 生成请求默认最多等待 10 分钟；失败会跳过该篇并继续处理同一来源的其他节目。
+- 单篇 AI 生成请求默认最多等待 5 分钟；每次运行默认只生成 1 篇草稿，失败会跳过该篇并尝试下一个候选。
 - 也可以在 `Actions` 页面手动运行 `Update podcast intelligence`。
 
 ## 5. 人工审核流程
