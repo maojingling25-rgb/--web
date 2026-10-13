@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700;900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap"
       rel="stylesheet"
     />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -16,6 +16,8 @@
     <script src="./demo-articles.js"></script>
     <style>
       :root {
+        --font-serif: "Noto Serif SC", "Source Han Serif SC", "Source Han Serif CN", "Songti SC",
+          "SimSun", serif;
         --ink: #20211f;
         --ink-soft: #4d4f49;
         --muted: #74766f;
@@ -35,8 +37,10 @@
         margin: 0;
         color: var(--ink);
         background: var(--paper);
-        font-family: "Noto Sans SC", sans-serif;
+        font-family: var(--font-serif);
         line-height: 1.7;
+        overflow-x: hidden;
+        text-rendering: optimizeLegibility;
       }
 
       a { color: inherit; text-decoration: none; }
@@ -52,8 +56,8 @@
         padding: 8px 0;
         color: var(--muted);
         border-bottom: 1px solid var(--line);
-        font: 10px/1.3 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 10px/1.3 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -71,7 +75,7 @@
         align-items: center;
         gap: 11px;
         font-weight: 700;
-        letter-spacing: -0.04em;
+        letter-spacing: 0;
       }
 
       .brand-mark {
@@ -97,7 +101,7 @@
         display: block;
         margin-top: 3px;
         color: var(--muted);
-        font: 9px/1 "DM Mono", monospace;
+        font: 9px/1 var(--font-serif);
         letter-spacing: 0;
       }
 
@@ -114,15 +118,22 @@
         padding: 76px 0 100px;
       }
 
-      .article-main { min-width: 0; }
+      .article-main,
+      .article-aside,
+      .source-panel,
+      .insight-card,
+      .insight-block,
+      .editorial-section {
+        min-width: 0;
+      }
 
       .eyebrow {
         display: inline-flex;
         align-items: center;
         gap: 8px;
         color: var(--accent);
-        font: 500 10px/1.3 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 500 10px/1.3 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -133,14 +144,17 @@
         content: "";
       }
 
-      h1, h2, p { margin: 0; }
+      h1, h2, h3, p {
+        margin: 0;
+        overflow-wrap: anywhere;
+      }
 
       h1 {
         max-width: 850px;
         margin-top: 20px;
         font-size: clamp(38px, 6vw, 72px);
         font-weight: 700;
-        letter-spacing: -0.08em;
+        letter-spacing: 0;
         line-height: 1.08;
       }
 
@@ -158,7 +172,7 @@
         gap: 9px 20px;
         margin-top: 26px;
         color: var(--muted);
-        font: 10px/1.5 "DM Mono", monospace;
+        font: 10px/1.5 var(--font-serif);
         text-transform: uppercase;
       }
 
@@ -177,15 +191,15 @@
 
       .source-panel-label {
         color: var(--muted);
-        font: 10px/1.4 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 10px/1.4 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
       .source-panel h2 {
         margin-top: 8px;
         font-size: 18px;
-        letter-spacing: -0.05em;
+        letter-spacing: 0;
       }
 
       .source-panel p {
@@ -221,17 +235,19 @@
         color: var(--ink-soft);
         font-size: 16px;
         line-height: 1.95;
+        overflow-wrap: anywhere;
       }
 
       .article-content h2 {
         display: flex;
         align-items: baseline;
+        flex-wrap: wrap;
         gap: 12px;
         margin: 58px 0 18px;
         color: var(--ink);
         font-size: 24px;
         font-weight: 700;
-        letter-spacing: -0.06em;
+        letter-spacing: 0;
         line-height: 1.3;
       }
 
@@ -250,7 +266,7 @@
         color: var(--ink);
         font-size: 18px;
         font-weight: 700;
-        letter-spacing: -0.04em;
+        letter-spacing: 0;
         line-height: 1.45;
       }
 
@@ -267,8 +283,8 @@
       .article-content .content-label {
         margin: 23px 0 7px;
         color: var(--accent);
-        font: 700 10px/1.4 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 700 10px/1.4 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -308,6 +324,7 @@
         border: 1px solid var(--line);
         border-left: 3px solid var(--accent);
         background: var(--white);
+        overflow-wrap: anywhere;
       }
 
       .insight-number {
@@ -315,14 +332,14 @@
         top: 22px;
         left: 22px;
         color: var(--accent);
-        font: 500 12px/1 "DM Mono", monospace;
+        font: 500 12px/1 var(--font-serif);
       }
 
       .insight-title {
         color: var(--ink);
         font-size: 18px;
         font-weight: 700;
-        letter-spacing: -0.04em;
+        letter-spacing: 0;
         line-height: 1.45;
       }
 
@@ -333,8 +350,8 @@
       .insight-field-label {
         margin-bottom: 6px;
         color: var(--accent);
-        font: 700 10px/1.4 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 700 10px/1.4 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -367,8 +384,8 @@
       .editorial-section .editorial-kicker {
         margin-bottom: 16px;
         color: var(--accent);
-        font: 700 10px/1.4 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 700 10px/1.4 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -396,6 +413,7 @@
         position: sticky;
         top: 25px;
         border-top: 1px solid var(--line);
+        overflow-wrap: anywhere;
       }
 
       .aside-block {
@@ -405,8 +423,8 @@
 
       .aside-label {
         color: var(--muted);
-        font: 10px/1.4 "DM Mono", monospace;
-        letter-spacing: 0.08em;
+        font: 10px/1.4 var(--font-serif);
+        letter-spacing: 0;
         text-transform: uppercase;
       }
 
@@ -421,7 +439,7 @@
         margin-top: 8px;
         color: var(--ink);
         font-size: 18px;
-        letter-spacing: -0.04em;
+        letter-spacing: 0;
         line-height: 1.3;
       }
 
@@ -436,7 +454,7 @@
         padding: 5px 8px;
         color: var(--muted);
         border: 1px solid var(--line);
-        font: 10px/1.2 "DM Mono", monospace;
+        font: 10px/1.2 var(--font-serif);
       }
 
       .loading,
